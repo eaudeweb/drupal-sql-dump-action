@@ -63,6 +63,8 @@ runs:
         Host server
           HostName $SSH_HOST
           User $SSH_USER
+          IdentityFile ~/.ssh/server.key
+          StrictHostKeyChecking no
           ProxyJump jumphost
         END
       env:
