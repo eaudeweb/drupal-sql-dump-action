@@ -76,5 +76,5 @@ runs:
       shell: bash
 
     - name: 'Dump SQL database'
-      run: ssh server 'cd ${{ inputs.project_dir }} && ./vendor/bin/drush sql:dump --result-file ${{ inputs.sql_dump_file }} --gzip'
+      run: ssh server 'cd ${{ inputs.project_dir }} && ./vendor/bin/drush sql:dump --extra-dump=--no-tablespaces --result-file ${{ inputs.sql_dump_file }} --gzip'
       shell: bash
