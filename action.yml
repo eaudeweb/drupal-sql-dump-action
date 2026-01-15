@@ -24,6 +24,19 @@ inputs:
   sql_dump_file:
     description: 'Absolute path to the SQL dump file (without .gz extension)'
     required: true
+  nextcloud_user:
+    description: 'Nextcloud username (WebDAV auth)'
+    required: true
+  nextcloud_app_password:
+    description: 'Nextcloud app password (WebDAV auth)'
+    required: true
+  nextcloud_path:
+    description: 'Project folder path in Nextcloud'
+    required: true
+  nextcloud_base_url:
+    description: 'Nextcloud base URL'
+    required: false
+    default: 'https://drive.eaudeweb.ro'
 
 runs:
   using: "composite"
@@ -77,4 +90,33 @@ runs:
 
     - name: 'Dump SQL database'
       run: ssh server 'cd ${{ inputs.project_dir }} && ./vendor/bin/drush sql:dump --extra-dump=--no-tablespaces --result-file ${{ inputs.sql_dump_file }} --gzip'
+      shell: bash
+
+    - name: 'Upload database dump to Nextcloud (from server via WebDAV)'
+      env:
+        NEXTCLOUD_USER: ${{ inputs.nextcloud_user }}
+        NEXTCLOUD_APP_PASSWORD: ${{ inputs.nextcloud_app_password }}
+        NEXTCLOUD_PATH: ${{ inputs.nextcloud_path }}
+        NEXTCLOUD_BASE_URL: ${{ inputs.nextcloud_base_url }}
+        SQL_DUMP_FILE: ${{ inputs.sql_dump_file }}
+      run: |
+        set -euo pipefail
+
+        ssh server "set -euo pipefail
+          DUMP_FILE='${SQL_DUMP_FILE}.gz'
+          if [ ! -f \"\$DUMP_FILE\" ]; then
+            echo 'Dump file not found on server:' \"\$DUMP_FILE\"
+            exit 1
+          fi
+
+          TARGET_URL='${NEXTCLOUD_BASE_URL}/remote.php/dav/files/${NEXTCLOUD_USER}/${NEXTCLOUD_PATH}/database.sql.gz'
+          echo 'Uploading to:' \"\$TARGET_URL\"
+
+          curl --fail -sS \
+            -u '${NEXTCLOUD_USER}:${NEXTCLOUD_APP_PASSWORD}' \
+            -T \"\$DUMP_FILE\" \
+            \"\$TARGET_URL\"
+
+          echo 'Upload completed.'
+        "
       shell: bash
