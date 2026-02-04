@@ -109,7 +109,7 @@ runs:
             exit 1
           fi
 
-          TARGET_URL='${NEXTCLOUD_BASE_URL}/remote.php/dav/files/${NEXTCLOUD_USER}/${NEXTCLOUD_PATH}/database.sql.gz'
+          TARGET_URL='${NEXTCLOUD_BASE_URL}/remote.php/dav/files/${NEXTCLOUD_USER}/${NEXTCLOUD_PATH}/mysql/database.sql.gz'
           echo 'Uploading to:' \"\$TARGET_URL\"
 
           curl --fail -sS \
