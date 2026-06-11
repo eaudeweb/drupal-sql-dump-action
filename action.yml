@@ -89,7 +89,7 @@ runs:
       shell: bash
 
     - name: 'Dump SQL database'
-      run: ssh server 'cd ${{ inputs.project_dir }} && ./vendor/bin/drush sql:dump --extra-dump=--no-tablespaces --structure-tables-list=cache,cache_*,watchdog,sessions,history --result-file ${{ inputs.sql_dump_file }} --gzip'
+      run: ssh server 'cd ${{ inputs.project_dir }} && ./vendor/bin/drush sql:dump --extra-dump="--no-tablespaces --skip-ssl" --structure-tables-list=cache,cache_*,watchdog,sessions,history --result-file ${{ inputs.sql_dump_file }} --gzip'
       shell: bash
 
     - name: 'Upload database dump to Nextcloud (from server via WebDAV)'
