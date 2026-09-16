@@ -15,4 +15,5 @@ steps:
       ssh_user_jumphost:    ${{ secrets.TEST_SSH_USER_JUMPHOST }}
       ssh_host_jumphost:    ${{ secrets.TEST_SSH_HOST_JUMPHOST }}
       sql_dump_file:      /var/www/config/www.example.com/sync/database.sql
+      anonymize:          true
 ```
