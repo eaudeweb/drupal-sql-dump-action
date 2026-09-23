@@ -17,3 +17,8 @@ steps:
       sql_dump_file:      /var/www/config/www.example.com/sync/database.sql
       anonymize:          true
 ```
+
+## SQL dump anonymization
+
+The action can be configured to ask Drush to anonymize the SQL dump during the process, however the project itself must be configured properly to support anonymization.
+Please refer to [gdpr-dump](https://github.com/eaudeweb/gdpr-dump) project to understand how first add support and configure in your Drupal project.
