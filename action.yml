@@ -94,12 +94,12 @@ runs:
 
     - name: 'Dump SQL database'
       if: ${{ inputs.anonymize != 'true' }}
-      run: ssh server 'cd ${{ inputs.project_dir }} && ./vendor/bin/drush sql:dump --extra-dump="--no-tablespaces --skip-ssl" --structure-tables-list=cache,cache_*,watchdog,sessions,history --result-file ${{ inputs.sql_dump_file }} --gzip'
+      run: ssh server 'cd ${{ inputs.project_dir }} && ./vendor/bin/drush sql:dump --extra-dump="--no-tablespaces --skip-ssl" --structure-tables-list=cache,cache_*,watchdog,sessions,history,flood,captcha_sessions --result-file ${{ inputs.sql_dump_file }} --gzip'
       shell: bash
 
     - name: 'Dump SQL database (anonymised)'
       if: ${{ inputs.anonymize == 'true' }}
-      run: ssh server 'cd ${{ inputs.project_dir }} && PATH=${{ inputs.project_dir }}/vendor/bin:$PATH ./vendor/bin/drush sql:dump --extra-dump="--gdpr-replacements-file=${{ inputs.project_dir }}/anonymize.schema.json" --structure-tables-list=cache,cache_*,watchdog,sessions,history --result-file ${{ inputs.sql_dump_file }} --gzip'
+      run: ssh server 'cd ${{ inputs.project_dir }} && PATH=${{ inputs.project_dir }}/vendor/bin:$PATH ./vendor/bin/drush sql:dump --extra-dump="--gdpr-replacements-file=${{ inputs.project_dir }}/anonymize.schema.json" --structure-tables-list=cache,cache_*,watchdog,sessions,history,flood,captcha_sessions --result-file ${{ inputs.sql_dump_file }} --gzip'
       shell: bash
 
     - name: 'Upload database dump to Nextcloud (from server via WebDAV)'
